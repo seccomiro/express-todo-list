@@ -1,0 +1,12 @@
+.form-group
+  label(for='titulo') Título
+  input.form-control#titulo(type='text' name='titulo' value=tarefa.titulo)
+  if erros && erros.titulo.length > 0
+    each e in erros.titulo
+      small.form-text.text-danger= e
+.form-group
+  label(for='descricao') Descrição (Opcional)
+  textarea.form-control#descricao(name='descricao' cols='30' rows='10')= tarefa.descricao
+  if erros && erros.descricao.length > 0
+    each e in erros.descricao
+      small.form-text.text-danger= e

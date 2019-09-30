@@ -1,10 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+const { salvarArquivo, lerArquivo } = require('../utils/bdUtil');
 
-let usuarios;
+const usuarios = lerArquivo();
 
-exports.ultimoId = () => {
-  let id = -1;
+const ultimoId = () => {
+  let id = 0;
   usuarios.forEach(u => {
     // eslint-disable-next-line prefer-destructuring
     if (u.id > id) id = u.id;
@@ -12,7 +11,7 @@ exports.ultimoId = () => {
   return id;
 };
 
-exports.validar = (nome, email, senha, senhaConfirmacao, edicao = false) => {
+const validar = (nome, email, senha, senhaConfirmacao) => {
   const erros = {
     nome: [],
     email: [],
@@ -34,13 +33,11 @@ exports.validar = (nome, email, senha, senhaConfirmacao, edicao = false) => {
   if (!email) {
     erros.email.push('Por favor, informe o seu e-mail.');
   }
-  if (!edicao) {
-    if (!senha) {
-      erros.senha.push('Por favor, informe a sua senha.');
-    }
-    if (!senhaConfirmacao) {
-      erros.senhaConfirmacao.push('Por favor, confirme a sua senha.');
-    }
+  if (!senha) {
+    erros.senha.push('Por favor, informe a sua senha.');
+  }
+  if (!senhaConfirmacao) {
+    erros.senhaConfirmacao.push('Por favor, confirme a sua senha.');
   }
   if (senha !== senhaConfirmacao) {
     erros.senhaConfirmacao.push('A senha informada não é igual à confirmação.');
@@ -49,24 +46,50 @@ exports.validar = (nome, email, senha, senhaConfirmacao, edicao = false) => {
   return erros;
 };
 
-exports.salvaJSON = callback => {
-  const usuariosJSON = JSON.stringify(usuarios);
-  fs.writeFile(
-    path.join(__dirname, '..', 'arquivos', 'usuarios.json'),
-    usuariosJSON,
-    'utf-8',
-    callback
-  );
+const buscaId = id => usuarios.find(u => u.id === id);
+
+const buscaIdIndex = id => usuarios.findIndex(u => u.id === id);
+
+const todos = () => usuarios;
+
+const inserir = (usuario, callback) => {
+  usuario.id = ultimoId() + 1;
+  usuario.tarefas = [];
+  usuarios.push(usuario);
+  console.log(typeof callback);
+  salvarArquivo(todos(), callback);
 };
 
-const leJSON = () => {
-  const dados = fs.readFileSync(
-    path.join(__dirname, '..', 'arquivos', 'usuarios.json'),
-    'utf-8'
-  );
-  usuarios = JSON.parse(dados);
-  return usuarios;
+const atualizar = (usuario, callback) => {
+  const usuarioSalvo = buscaId(usuario.id);
+  usuarioSalvo.nome = usuario.nome;
+  usuarioSalvo.email = usuario.email;
+  usuarioSalvo.senha = usuario.senha;
+  salvarArquivo(todos(), callback);
 };
 
-usuarios = leJSON();
-exports.usuarios = usuarios;
+const apagar = (usuario, callback) => {
+  const index = buscaIdIndex(usuario.id);
+  if (index > -1) {
+    usuarios.splice(index, 1);
+    salvarArquivo(todos(), callback);
+  } else {
+    callback();
+  }
+};
+
+const salvar = (usuario, callback) => {
+  if (usuario.id && buscaId(usuario.id)) {
+    atualizar(usuario, callback);
+  } else {
+    inserir(usuario, callback);
+  }
+};
+
+exports.validar = validar;
+exports.buscaId = buscaId;
+exports.todos = todos;
+exports.inserir = inserir;
+exports.atualizar = atualizar;
+exports.salvar = salvar;
+exports.apagar = apagar;

@@ -1,0 +1,16 @@
+extends ../base
+
+block conteudo
+  .card
+    .card-header Minhas Tarefas
+    ul.list-group.list-group-flush.lista-tarefas
+      each tarefa in tarefas
+        li.list-group-item
+          if tarefa.concluida
+            a.text-danger.mr-3(href=`/tarefas/${tarefa.id}/concluir`)
+              i.far.fa-check-square
+            a.text-danger(href=`/tarefas/${tarefa.id}`)= tarefa.titulo
+          else
+            a.text-dark.mr-3(href=`/tarefas/${tarefa.id}/concluir`)
+              i.far.fa-square
+            a.text-dark(href=`/tarefas/${tarefa.id}`)= tarefa.titulo

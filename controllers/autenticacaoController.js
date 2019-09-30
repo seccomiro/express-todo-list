@@ -1,11 +1,24 @@
+const path = require('path');
 const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 const usuarioModel = require('../models/usuarioModel');
+const tarefaModel = require('../models/tarefaModel');
 
 exports.iniciarSessao = session({
+  store: new FileStore({
+    path: path.join(__dirname, '..', 'arquivos', 'session')
+  }),
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true
 });
+
+exports.restaurarSessao = (req, res, next) => {
+  if (req.session.usuario) {
+    tarefaModel.logarUsuario(req.session.usuario);
+  }
+  next();
+};
 
 exports.copiarSessaoParaViews = (req, res, next) => {
   res.locals.session = req.session;
@@ -29,30 +42,25 @@ exports.login = (req, res) => {
 exports.validaLogin = (req, res) => {
   const { email, senha } = req.body;
 
-  let statusCode = 200;
-  let mensagem;
-  let view;
-
-  const usuario = usuarioModel.usuarios.find(
-    u => u.email === email && u.senha === senha
-  );
+  const usuario = usuarioModel
+    .todos()
+    .find(u => u.email === email && u.senha === senha);
 
   if (usuario) {
-    mensagem = `Seja bem vindo, ${usuario.nome}`;
-    view = 'sucesso';
     req.session.usuario = usuario;
+    tarefaModel.logarUsuario(usuario);
+    res.redirect('/tarefas');
   } else {
-    statusCode = 401;
-    mensagem = 'Email ou senha incorretos';
-    view = 'autenticacao/login';
+    res
+      .status(401)
+      .render('autenticacao/login', { mensagem: 'Email ou senha incorretos' });
   }
-
-  res.status(statusCode).render(view, { mensagem });
 };
 
 exports.logout = (req, res) => {
   req.session.destroy(() => {
-    res.redirect('/usuarios');
+    tarefaModel.deslogarUsuario();
+    res.redirect('/login');
   });
 };
 
@@ -69,15 +77,11 @@ exports.validaRegistrar = (req, res) => {
   const erros = usuarioModel.validar(nome, email, senha, senhaConfirmacao);
 
   if (!erros.temErros()) {
-    const id = usuarioModel.ultimoId() + 1;
-    const usuario = { id, nome, email, senha };
-    usuarioModel.usuarios.push(usuario);
-    req.session.usuario = usuario;
-    usuarioModel.salvaJSON(() => {
-      res.status(200).render('sucesso', {
-        usuario,
-        mensagem: `Usuário ${usuario.nome} registrado com sucesso.`
-      });
+    const usuario = { nome, email, senha };
+    usuarioModel.salvar(usuario, () => {
+      req.session.usuario = usuario;
+      tarefaModel.logarUsuario(usuario);
+      res.redirect('/tarefas');
     });
   } else {
     const usuarioView = { nome, email };

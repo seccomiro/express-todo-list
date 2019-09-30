@@ -1,0 +1,8 @@
+extends ../base
+
+block conteudo
+  .card
+    .card-header= tarefa.titulo
+    .card-body
+      p.card-text= tarefa.descricao
+      a.btn.btn-primary(href='/tarefas') Voltar

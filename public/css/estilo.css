@@ -1,3 +1,7 @@
-body {
-  background-color: #e26c6c;
+html {
+  overflow-y: scroll;
+}
+
+.lista-tarefas {
+  font-size: 150%;
 }

@@ -1,13 +1,12 @@
 doctype html
-html(lang='en')
+html(lang='pt-br')
   head
     include _head
-    
-    title IFPR - #{titulo}
+    title IFList - #{titulo}
   body
+    include _menu
     .container
       include _cabecalho
-
       block conteudo
-
       include _rodape
+    include _scripts

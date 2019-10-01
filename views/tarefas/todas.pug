@@ -1,8 +1,11 @@
 extends ../base
 
 block conteudo
+  div.text-center
+    h2 Minhas Tarefas
+    a.btn.btn-primary.btn-lg.mb-4(href='/tarefas/nova') Nova Tarefa
+
   .card
-    .card-header Minhas Tarefas
     ul.list-group.list-group-flush.lista-tarefas
       each tarefa in tarefas
         li.list-group-item

@@ -56,7 +56,6 @@ const inserir = (usuario, callback) => {
   usuario.id = ultimoId() + 1;
   usuario.tarefas = [];
   usuarios.push(usuario);
-  console.log(typeof callback);
   salvarArquivo(todos(), callback);
 };
 

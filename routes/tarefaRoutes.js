@@ -10,7 +10,7 @@ router
   .post('/', proteger, tarefaController.cadastrar)
   .get('/:id/editar', proteger, tarefaController.editar)
   .post('/:id', proteger, tarefaController.atualizar)
-  .post('/:id/apagar', proteger, tarefaController.apagar)
+  .get('/:id/apagar', proteger, tarefaController.apagar)
   .get('/:id/concluir', proteger, tarefaController.concluir);
 
 module.exports = router;

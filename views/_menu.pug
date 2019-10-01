@@ -1,22 +1,23 @@
 nav.navbar.navbar-expand-lg.navbar-light.bg-light
-  a.navbar-brand(href='/') IFList
-  button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
-    span.navbar-toggler-icon
-  div.collapse.navbar-collapse#navbarSupportedContent
-    ul.navbar-nav.mr-auto
-      if session.usuario
-        li.nav-item
-          a.nav-link(href='/tarefas') Home
-            span.sr-only
-        li.nav-item
-          a.nav-link(href='/tarefas/nova') Nova Tarefa
-            span.sr-only
-    ul.navbar-nav
-      li.nav-item.dropdown
-        a.nav-link.dropdown-toggle#navbarDropdown(href='#' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') #{session.usuario ? session.usuario.nome : 'Visitante'} 
-        .dropdown-menu.dropdown-menu-right(aria-labelledby='navbarDropdown')
-          if session.usuario
-            a.dropdown-item(href='/logout') Deslogar
-          else
-            a.dropdown-item(href='/login') Fazer Login
-            a.dropdown-item(href='/registrar') Cadastre-se
+  .container
+    a.navbar-brand(href='/') IFList
+    button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
+      span.navbar-toggler-icon
+    div.collapse.navbar-collapse#navbarSupportedContent
+      ul.navbar-nav.mr-auto
+        if session.usuario
+          li.nav-item
+            a.nav-link(href='/tarefas') Home
+              span.sr-only
+          li.nav-item
+            a.nav-link(href='/tarefas/nova') Nova Tarefa
+              span.sr-only
+      ul.navbar-nav
+        li.nav-item.dropdown
+          a.nav-link.dropdown-toggle#navbarDropdown(href='#' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false') #{session.usuario ? session.usuario.nome : 'Visitante'} 
+          .dropdown-menu.dropdown-menu-right(aria-labelledby='navbarDropdown')
+            if session.usuario
+              a.dropdown-item(href='/logout') Deslogar
+            else
+              a.dropdown-item(href='/login') Fazer Login
+              a.dropdown-item(href='/registrar') Cadastre-se

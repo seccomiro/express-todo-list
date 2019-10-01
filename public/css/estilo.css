@@ -2,6 +2,10 @@ html {
   overflow-y: scroll;
 }
 
+body {
+  margin-bottom: 80px;
+}
+
 .lista-tarefas {
   font-size: 150%;
 }

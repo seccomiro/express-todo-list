@@ -5,8 +5,10 @@ html(lang='pt-br')
     title IFList - #{titulo}
   body
     include _menu
+    include _cabecalho
     .container
-      include _cabecalho
-      block conteudo
+      .row.justify-content-center
+        .col-lg-6
+          block conteudo
       include _rodape
     include _scripts

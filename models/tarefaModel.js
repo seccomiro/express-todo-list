@@ -63,7 +63,7 @@ const todas = () =>
 const inserir = (tarefa, callback) => {
   tarefa.id = ultimoId() + 1;
   tarefa.concluida = false;
-  usuario.tarefas.push(tarefa);
+  usuarioLogado().tarefas.push(tarefa);
   salvarArquivo(usuarioModel.todos(), callback);
 };
 

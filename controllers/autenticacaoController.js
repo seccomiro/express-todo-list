@@ -4,14 +4,17 @@ const FileStore = require('session-file-store')(session);
 const usuarioModel = require('../models/usuarioModel');
 const tarefaModel = require('../models/tarefaModel');
 
-exports.iniciarSessao = session({
+const sessionOptions = {
   store: new FileStore({
     path: path.join(__dirname, '..', 'arquivos', 'session')
   }),
   secret: 'keyboard cat',
   resave: false,
-  saveUninitialized: true
-});
+  saveUninitialized: true,
+  name: 'todo.session.id'
+};
+
+exports.iniciarSessao = session(sessionOptions);
 
 exports.restaurarSessao = (req, res, next) => {
   if (req.session.usuario) {
@@ -59,6 +62,7 @@ exports.validaLogin = (req, res) => {
 
 exports.logout = (req, res) => {
   req.session.destroy(() => {
+    res.clearCookie(sessionOptions.name);
     tarefaModel.deslogarUsuario();
     res.redirect('/login');
   });

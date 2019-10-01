@@ -47,14 +47,14 @@ exports.editar = (req, res) => {
   const id = req.params.id * 1;
   const tarefa = tarefaModel.buscaId(id);
 
-  if (req.params.id && tarefa) {
+  if (req.params.id && tarefa && !tarefa.concluida) {
     res.status(200).render('tarefas/editar', {
       tarefa,
       titulo: `Editando ${tarefa.titulo}`
     });
   } else {
-    res.status(404).render('404', {
-      titulo: 'Recurso Inexistente'
+    res.status(401).render('401', {
+      titulo: 'Ação não permitida'
     });
   }
 };

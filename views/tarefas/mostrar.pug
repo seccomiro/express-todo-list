@@ -5,6 +5,7 @@ block conteudo
     .card-body
       h2.card-title= tarefa.titulo
       p.card-text= tarefa.descricao
-      a.btn.btn-primary.mr-2(href=`/tarefas/${tarefa.id}/editar`) Editar
+      if !tarefa.concluida
+        a.btn.btn-primary.mr-2(href=`/tarefas/${tarefa.id}/editar`) Editar
       a.btn.btn-danger(href=`/tarefas/${tarefa.id}/apagar`) Remover
       a.btn.btn-link(href=`/tarefas`) Voltar
